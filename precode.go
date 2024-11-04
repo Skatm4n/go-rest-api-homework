@@ -74,6 +74,11 @@ func postTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if _, exstat := tasks[task.ID]; exstat {
+		http.Error(w, "Задача уже сущетсвует!", http.StatusBadRequest)
+		return
+	}
+
 	tasks[task.ID] = task
 
 	w.Header().Set("Content-Type", "application/json")
@@ -103,7 +108,7 @@ func getTask(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
-	w.Write(resp)
+	_, _ = w.Write(resp)
 }
 
 func deleteTask(w http.ResponseWriter, r *http.Request) {
